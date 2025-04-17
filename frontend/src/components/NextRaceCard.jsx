@@ -25,7 +25,7 @@ const NextRaceCard = ({ raceInfo }) => {
                      border="2px solid black"
                      borderRadius={"5px"}
                      overflow={"hidden"}
-                     ml={"130px"}
+                     ml={"225px"}
                   >
                      <Image src={flag} w={"45px"}></Image>
                   </Box>
