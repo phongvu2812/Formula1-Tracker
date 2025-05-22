@@ -33,7 +33,12 @@ const CalendarCard = ({ raceInfo }) => {
                      <Box fontSize={23} w={"150px"}>
                         <Text>{dates}</Text>
                         <Text bg={"black"} color={"white"} borderRadius={5} px={1} w="fit-content">
-                           {month}
+                           {month.includes("-")
+                              ? month
+                                   .split("-")
+                                   .map((m) => m.trim().substring(0, 3))
+                                   .join(" - ")
+                              : month.substring(0, 3)}
                         </Text>
                      </Box>
                   </VStack>

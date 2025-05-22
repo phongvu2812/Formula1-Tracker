@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
    Box,
    Heading,
@@ -12,21 +12,77 @@ import {
    HStack,
    Text,
    Image,
+   Spinner,
+   Center,
 } from "@chakra-ui/react";
-import { driversStanding } from "../data/standing";
 import { drivers } from "../data/drivers";
 
+// Helper function to normalize driver names for matching
+const normalizeDriverName = (name) => {
+   const nameMap = {
+      "Andrea Kimi Antonelli": "Kimi Antonelli",
+      "Nicholas Hülkenberg": "Nico Hulkenberg",
+      "Nicholas Huelkenberg": "Nico Hulkenberg",
+      "Nico Hülkenberg": "Nico Hulkenberg",
+   };
+   return nameMap[name] || name;
+};
+
+// Helper function to find driver info from drivers.js
+const findDriverInfo = (apiDriver) => {
+   const fullName = `${apiDriver.givenName} ${apiDriver.familyName}`;
+   const normalizedName = normalizeDriverName(fullName);
+   return drivers.find((d) => d.name === normalizedName);
+};
+
 export const Drivers = () => {
-   // Merge driver images with standings data
-   const combinedData = driversStanding.map((standing) => {
-      const driverInfo = drivers.find((d) => d.name === standing.driver);
-      return {
-         ...standing,
-         driverImage: driverInfo?.driverImage,
-         nationalityImage: driverInfo?.nationalityImage,
-         nationality: driverInfo?.nationality,
+   const [driverStandings, setDriverStandings] = useState([]);
+   const [loading, setLoading] = useState(true);
+
+   useEffect(() => {
+      const fetchDriverStandings = async () => {
+         try {
+            const response = await fetch("https://api.jolpi.ca/ergast/f1/2025/driverstandings/");
+            const data = await response.json();
+            const standings = data.MRData.StandingsTable.StandingsLists[0].DriverStandings;
+
+            // Transform and combine API data with driver images
+            const transformedStandings = standings.map((standing) => {
+               const driverInfo = findDriverInfo(standing.Driver);
+               const fullName = `${standing.Driver.givenName} ${standing.Driver.familyName}`;
+               const normalizedName = normalizeDriverName(fullName);
+
+               return {
+                  position: standing.position,
+                  driver: normalizedName,
+                  team: standing.Constructors[0].name,
+                  points: standing.points,
+                  nationality: driverInfo?.nationality || standing.Driver.nationality,
+                  driverImage: driverInfo?.driverImage,
+                  nationalityImage: driverInfo?.nationalityImage,
+               };
+            });
+
+            setDriverStandings(transformedStandings);
+         } catch (error) {
+            console.error("Error fetching driver standings:", error);
+         } finally {
+            setLoading(false);
+         }
       };
-   });
+
+      fetchDriverStandings();
+   }, []);
+
+   if (loading) {
+      return (
+         <Container maxW="container.xl" py={8}>
+            <Center h="50vh">
+               <Spinner size="xl" color="f1.500" />
+            </Center>
+         </Container>
+      );
+   }
 
    return (
       <Container maxW="container.xl" py={8}>
@@ -43,7 +99,7 @@ export const Drivers = () => {
                   </Tr>
                </Thead>
                <Tbody>
-                  {combinedData.map((driver) => (
+                  {driverStandings.map((driver) => (
                      <Tr key={driver.position}>
                         <Td fontWeight="bold" color="f1.500">
                            {driver.position}

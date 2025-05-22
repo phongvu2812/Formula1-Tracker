@@ -5,6 +5,7 @@ import { HomePage } from "./pages/HomePage";
 import { Box } from "@chakra-ui/react";
 import { Drivers } from "./pages/Drivers";
 import { Constructors } from "./pages/Constructors";
+import PaceHistory from "./pages/PaceHistory";
 
 function App() {
    return (
@@ -15,6 +16,7 @@ function App() {
                <Route path="/" element={<HomePage />} />
                <Route path="/drivers" element={<Drivers />} />
                <Route path="/constructors" element={<Constructors />} />
+               <Route path="/pace-history" element={<PaceHistory />} />
             </Routes>
          </Box>
       </>

@@ -3,7 +3,6 @@ import { Box, Container, Text, VStack, HStack, SimpleGrid, Flex } from "@chakra-
 import CalendarCard from "../components/CalendarCard";
 import NextRaceCard from "../components/NextRaceCard";
 import { f1_2025_schedule, f1_2025_session_time } from "../data/raceCalendar.js";
-
 import site from "../assets/IMG_20200626_171802.jpg";
 
 export const HomePage = () => {

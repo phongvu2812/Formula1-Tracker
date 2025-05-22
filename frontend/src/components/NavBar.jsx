@@ -39,6 +39,17 @@ export const NavBar = () => {
                      <Link to={"/constructors"}>Constructors Standing</Link>
                   </Text>
                </Flex>
+               <Flex
+                  h={"100%"}
+                  alignItems={"center"}
+                  p={4}
+                  _hover={{ bg: "black", transition: "all 0.3s ease" }}
+                  cursor="pointer"
+               >
+                  <Text>
+                     <Link to={"/pace-history"}>Pace History</Link>
+                  </Text>
+               </Flex>
             </HStack>
          </HStack>
       </Container>
